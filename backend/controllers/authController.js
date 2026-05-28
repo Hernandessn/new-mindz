@@ -38,7 +38,7 @@ const register = async (req, res) => {
         });
     } catch(error){
         console.error('Register error:', error);
-        res.status(500).json({ msg: 'Erro interno do servidor' });
+        res.status(500).json({ msg: 'Internal server error' });
     }
 }
 
@@ -47,7 +47,7 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        console.log('🔐 Tentativa de login:', email);
+        console.log('🔐 Login attempt:', email);
 
         const user = await User.findOne({ email });
         if (!user) {
@@ -64,7 +64,7 @@ const login = async (req, res) => {
             process.env.JWT_SECRET, 
             { expiresIn: '1h' }
         );
-        console.log('✅ Login realizado:', email);
+        console.log('✅ Login completed:', email);
         res.status(200).json({
             msg: 'Login successful',
             token,
