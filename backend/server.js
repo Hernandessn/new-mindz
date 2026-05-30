@@ -1,8 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import { router } from './routes/authRoutes.js';
-
+import { router as authRouter } from './routes/authRoutes.js';
+import { router as contentRouter} from './routes/contentRoutes.js';
 dotenv.config();
 
 
@@ -25,6 +25,6 @@ connectDB();
 
 app.use(express.json());
 
-app.use('/auth', router);
-
+app.use('/auth', authRouter);
+app.use('/content', contentRouter);
 app.listen(PORT, () => console.log(`The server is running on the port: ${PORT}`));
