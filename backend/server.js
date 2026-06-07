@@ -1,10 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import { router as authRouter } from './routes/authRoutes.js';
 import { router as contentRouter} from './routes/contentRoutes.js';
 dotenv.config();
-
 
 const app = express();
 const PORT = 3000;
@@ -22,8 +22,13 @@ const connectDB = async () => {
 
 connectDB();
 
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 
 app.use(express.json());
+
+
 
 app.use('/auth', authRouter);
 app.use('/content', contentRouter);
