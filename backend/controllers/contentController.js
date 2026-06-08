@@ -218,4 +218,14 @@ const confirmContent = async (req, res) => {
   }
 };
 
-export { content, confirmContent };
+const getContents = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const contents = await Content.find({ userId });
+    res.status(200).json(contents);
+  } catch (error) {
+    res.status(500).json({ msg: 'Internal error' })
+    console.error(error);
+  }
+}
+export { content, confirmContent, getContents };
