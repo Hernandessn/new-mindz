@@ -3,6 +3,7 @@ import { Home } from './pages/Home'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { Upload } from './pages/Upload'
+import { Network } from './pages/Network'
 
 function App() {
 
@@ -14,7 +15,7 @@ function App() {
         <Route path='/dashboard' element={<div>Dashboard</div>} />
         <Route path='/register' element={<Register />} />
         <Route path='/upload' element={<Upload />} />
-        <Route path='/network/:contentId' element={<div>Network</div>} />
+        <Route path='/network/:contentId' element={<Network />} />
       </Routes>
     </Router>
   )
