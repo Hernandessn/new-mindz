@@ -20,6 +20,8 @@ const neuronsSchema = new mongoose.Schema({
         enum: ["red", "orange", "yellow", "green"],
         required: true
     },
+    greenSessions: [{ type: mongoose.Schema.Types.ObjectId }],
+    permanentGreen: { type: Boolean, default: false },
     memoryStatus: {
         type: String,
         enum: ["green", "green-fading", "gray", "black"],
@@ -38,18 +40,18 @@ const neuronsSchema = new mongoose.Schema({
     }],
     interactions: [
         {
-        timestamp: {
-            type: Date,
-            required: true
-        },
-        responseTime: {
-            type: Number,
-            required: true
-        },
-        correct: {
-            type: Boolean,
-            required: true
-        }
+            timestamp: {
+                type: Date,
+                required: true
+            },
+            responseTime: {
+                type: Number,
+                required: true
+            },
+            correct: {
+                type: Boolean,
+                required: true
+            }
         }
     ]
 })

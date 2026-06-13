@@ -120,10 +120,15 @@ Regras:
 
 const submitAnswer = async (req, res) => {
     try {
+
         const { sessionId } = req.params;
         const { studentAnswer, responseTime } = req.body;
         const session = await Session.findById(sessionId);
-
+        if (!session.currentQuestion) {
+            return res.status(400).json({
+                msg: "Nenhuma pergunta pendente. Chame GET /session/:id/question primeiro."
+            });
+        }
         const { currentQuestion } = session;
 
         const prompt = `
@@ -160,13 +165,22 @@ Retorne APENAS um JSON válido, sem texto adicional:
 
         const statusOrder = ['red', 'orange', 'yellow', 'green'];
         const currentIndex = statusOrder.indexOf(neuron.performanceStatus);
-        const newIndex = Math.max(0, Math.min(3, currentIndex + (answer.correct ? 1 : -1)));
+        let newIndex;
+
+        if (neuron.permanentGreen && !answer.correct) {
+            newIndex = currentIndex;
+        } else {
+            newIndex = Math.max(0, Math.min(3, currentIndex + (answer.correct ? 1 : -1)));
+        }
+
         const newStatus = statusOrder[newIndex];
+
+        const points = answer.correct ? (4 - currentIndex) * 5 : 0;
 
         await Neuron.findByIdAndUpdate(currentQuestion.neuronId, {
             performanceStatus: newStatus,
             lastReviewedAt: Date.now(),
-            score: neuron.score + (answer.correct ? 10 : 0),
+            score: neuron.score + points,
             $push: {
                 interactions: {
                     timestamp: Date.now(),
@@ -175,6 +189,18 @@ Retorne APENAS um JSON válido, sem texto adicional:
                 }
             }
         });
+        if (newStatus === 'green' && answer.correct) {
+            const greenSessions = neuron.greenSessions || [];
+
+            if (!greenSessions.some(id => id.equals(sessionId))) {
+                greenSessions.push(sessionId);
+            }
+
+            await Neuron.findByIdAndUpdate(currentQuestion.neuronId, {
+                greenSessions,
+                permanentGreen: greenSessions.length >= 3
+            });
+        }
         await Session.findByIdAndUpdate(sessionId, {
             $push: {
                 interactions: {
