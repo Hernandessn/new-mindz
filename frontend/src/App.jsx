@@ -14,6 +14,7 @@ function App() {
         <Route path='/dashboard' element={<div>Dashboard</div>} />
         <Route path='/register' element={<Register />} />
         <Route path='/upload' element={<Upload />} />
+        <Route path='/network/:contentId' element={<div>Network</div>} />
       </Routes>
     </Router>
   )
