@@ -118,4 +118,85 @@ Regras:
 
 }
 
-export { startSession, getQuestion };
+const submitAnswer = async (req, res) => {
+    try {
+        const { sessionId } = req.params;
+        const { studentAnswer, responseTime } = req.body;
+        const session = await Session.findById(sessionId);
+
+        const { currentQuestion } = session;
+
+        const prompt = `
+Você é um professor avaliando a resposta de um aluno.
+
+Pergunta: ${currentQuestion.question}
+Resposta correta: ${currentQuestion.answer}
+Resposta do aluno: ${studentAnswer}
+
+Avalie se a resposta do aluno está correta, considerando equivalência de significado, não apenas correspondência exata de texto.
+
+Retorne APENAS um JSON válido, sem texto adicional:
+{
+  "correct": true | false,
+  "feedback": "breve explicação sobre a avaliação"
+}
+`;
+        const completion = await groq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.3-70b-versatile",
+        });
+
+        const responseText = completion.choices?.[0]?.message?.content || "";
+        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+
+        if (!jsonMatch) {
+            throw new Error("No JSON found in the AI response");
+        }
+
+        const answer = JSON.parse(jsonMatch[0]);
+
+        const neuron = await Neuron.findById(currentQuestion.neuronId);
+
+
+        const statusOrder = ['red', 'orange', 'yellow', 'green'];
+        const currentIndex = statusOrder.indexOf(neuron.performanceStatus);
+        const newIndex = Math.max(0, Math.min(3, currentIndex + (answer.correct ? 1 : -1)));
+        const newStatus = statusOrder[newIndex];
+
+        await Neuron.findByIdAndUpdate(currentQuestion.neuronId, {
+            performanceStatus: newStatus,
+            lastReviewedAt: Date.now(),
+            score: neuron.score + (answer.correct ? 10 : 0),
+            $push: {
+                interactions: {
+                    timestamp: Date.now(),
+                    responseTime,
+                    correct: answer.correct
+                }
+            }
+        });
+        await Session.findByIdAndUpdate(sessionId, {
+            $push: {
+                interactions: {
+                    neuronId: currentQuestion.neuronId,
+                    responseTime,
+                    correct: answer.correct
+                }
+            },
+            $unset: { currentQuestion: "" }
+        });
+        return res.status(200).json({
+            correct: answer.correct,
+            feedback: answer.feedback,
+            newStatus
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            msg: "Internal error",
+            error: error.message,
+        });
+    }
+
+}
+export { startSession, getQuestion, submitAnswer };
