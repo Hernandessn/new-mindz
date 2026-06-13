@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import { router as authRouter } from './routes/authRoutes.js';
 import { router as contentRouter} from './routes/contentRoutes.js';
+import { router as sessionRouter } from './routes/sessionRoutes.js';
 dotenv.config();
 
 const app = express();
@@ -32,4 +33,6 @@ app.use(express.json());
 
 app.use('/auth', authRouter);
 app.use('/content', contentRouter);
+app.use('/session', sessionRouter);
+
 app.listen(PORT, () => console.log(`The server is running on the port: ${PORT}`));
