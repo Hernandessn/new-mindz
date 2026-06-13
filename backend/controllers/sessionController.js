@@ -93,9 +93,20 @@ Regras:
 
         const question = JSON.parse(jsonMatch[0]);
 
+
+        await Session.findByIdAndUpdate(sessionId, {
+            currentQuestion: {
+                neuronId: weakest._id,
+                question: question.question,
+                answer: question.answer,
+                difficulty: question.difficulty
+            }
+        });
+
         return res.status(200).json({
             neuronId: weakest._id,
-            ...question
+            question: question.question,
+            difficulty: question.difficulty
         });
     } catch (error) {
         console.error(error);

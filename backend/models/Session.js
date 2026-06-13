@@ -11,6 +11,15 @@ const sessionSchema = new mongoose.Schema({
         ref: 'Content',
         required: true
     },
+    currentQuestion: {
+        neuronId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Neuron'
+        },
+        question: String,
+        answer: String,
+        difficulty: String
+    },
     interactions: [
         {
             neuronId: {
