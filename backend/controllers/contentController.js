@@ -159,7 +159,7 @@ const confirmContent = async (req, res) => {
         concept: neuron.concept,
 
         performanceStatus: "red",
-        memoryStatus: "black",
+        memoryStatus: "green",
         score: 0,
 
         connections: [],
@@ -228,4 +228,16 @@ const getContents = async (req, res) => {
     console.error(error);
   }
 }
-export { content, confirmContent, getContents };
+
+const getContentById = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const contents = await Content.findOne({ _id: id, userId }).populate('neurons');
+    res.status(200).json(contents);
+  } catch (error) {
+    res.status(500).json({ msg: 'Internal error' })
+    console.error(error);
+  }
+}
+export { content, confirmContent, getContents, getContentById };
