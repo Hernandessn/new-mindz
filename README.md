@@ -178,9 +178,9 @@ Você é um tutor educacional adaptativo.
 
 Gere UMA pergunta sobre o conceito abaixo considerando o desempenho atual do aluno.
 
-Conceito: {concept}
-Status do aluno neste conceito: {performanceStatus}
-Últimas interações: {interactions}
+Conceito: ${weakest.concept}
+Status do aluno neste conceito: ${weakest.performanceStatus}
+Últimas interações: ${JSON.stringify(weakest.interactions)}
 
 Retorne APENAS um JSON válido, sem texto adicional:
 {
