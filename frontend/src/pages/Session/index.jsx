@@ -9,6 +9,7 @@ export const Session = () => {
     const [sessionId, setSessionId] = useState(null);
     const [question, setQuestion] = useState(null);
     const [answer, setAnswer] = useState('');
+    const [feedback, setFeedback] = useState(null);
 
     useEffect(() => {
         const startSession = async () => {
@@ -40,6 +41,8 @@ export const Session = () => {
     }, [sessionId]);
     const handleSubmit = async (e) => {
         try {
+
+            setFeedback(null);
             e.preventDefault();
             const { data } = await api.patch(`/session/${sessionId}`, {
                 studentAnswer: answer,
@@ -47,6 +50,7 @@ export const Session = () => {
             });
             setAnswer('');
             getQuestion();
+            setFeedback({ correct: data.correct, text: data.feedback });
         } catch (error) {
             console.error(error);
         }
@@ -62,6 +66,11 @@ export const Session = () => {
                 required
             />
             <Button type="submit">Responder</Button>
+            {feedback && (
+                <p style={{ color: feedback.correct ? 'green' : 'red' }}>
+                    {feedback.text}
+                </p>
+            )}
         </Form>
     );
 }
