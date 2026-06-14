@@ -9,6 +9,7 @@ import {
     FloatLabel,
     Button
 } from "./styles";
+import { toast } from "react-toastify";
 
 export const Register = () => {
     const [email, setEmail] = useState('');
@@ -22,9 +23,12 @@ export const Register = () => {
         try {
             e.preventDefault();
             const { data } = await api.post('/auth/register', { name, email, password });
+            toast.success('Conta criada com sucesso!')
             navigate('/login');
         } catch (error) {
             console.error(error);
+            toast.error('Erro ao criar a conta, verifique todos os campos!');
+
         }
 
     }

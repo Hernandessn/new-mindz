@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { api } from '../../services/api';
 import { Button, Form, Input } from "./styles";
+import { toast } from "react-toastify";
 
 export const Session = () => {
     const { contentId } = useParams();
@@ -17,7 +18,8 @@ export const Session = () => {
                 const { data } = await api.post('/session', { contentId });
                 setSessionId(data.sessionId);
             } catch (error) {
-                console.error(error)
+                console.error(error);
+                toast.error('Erro ao iniciar sessão!');
             }
         };
 
@@ -32,6 +34,7 @@ export const Session = () => {
             setNeuronId(data.neuronId);
         } catch (error) {
             console.error(error);
+            toast.error('Erro ao buscar questão!');
         }
     };
     useEffect(() => {
@@ -53,6 +56,7 @@ export const Session = () => {
             setFeedback({ correct: data.correct, text: data.feedback });
         } catch (error) {
             console.error(error);
+            toast.error('Erro ao responder a questão!');
         }
     }
     return (

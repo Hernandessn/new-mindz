@@ -9,6 +9,7 @@ import {
   FloatLabel,
   Button
 } from "./styles";
+import { toast } from "react-toastify";
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -22,9 +23,11 @@ export const Login = () => {
       e.preventDefault();
       const { data } = await api.post('/auth/login', { email, password });
       localStorage.setItem('token', data.token);
+      toast.success('Conta logada com sucesso!');
       navigate('/dashboard');
     } catch (error) {
       console.error(error);
+      toast.error('Email ou senha incorretos');
     }
 
   }

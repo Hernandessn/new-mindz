@@ -8,6 +8,7 @@ import {
     ContainerInput, 
     Input 
 } from "./styles";
+import { toast } from "react-toastify";
 
 
 export const Upload = () => {
@@ -33,9 +34,12 @@ export const Upload = () => {
                     'Content-Type': 'multipart/form-data',
                 }
             });
+            toast.success('Arquivo enviado com sucesso!');
             setNeurons(data.neurons);
         } catch (error) {
             console.error(error);
+            toast.error('Erro ao enviar o arquivo, tente novamente!');
+
         }
     }
 
@@ -53,9 +57,11 @@ export const Upload = () => {
     const handleConfirm = async () => {
         try {
             const { data } = await api.post('/content/confirm', { title, neurons });
+            toast.success('Conteúdo confirmado com sucesso!');
             navigate(`/network/${data.contentId}`)
         } catch (error) {
             console.error(error);
+            toast.error('Erro ao gerar conteúdo!');
         }
     }
     return (
@@ -65,9 +71,9 @@ export const Upload = () => {
                 placeholder="Título do Conteúdo"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)} />
-                <Button onClick={handleConfirm}>Confirmar</Button>
+                <Button onClick={handleConfirm} disabled={neurons.length === 0}>Confirmar</Button>
             <Input type="file" accept=".pdf" onChange={handleFileChange} />
-            <Button onClick={handleUpload}>Enviar</Button>
+            <Button onClick={handleUpload}>Criar neurônios</Button>
             {neurons.map((neuron, index) => (
                 <div key={index}>
                     {editingIndex === index ? (
