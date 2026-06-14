@@ -24,17 +24,16 @@ export const Session = () => {
         startSession();
     }, [contentId]);
 
+    const getQuestion = async () => {
+        try {
+            const { data } = await api.get(`/session/${sessionId}/question`);
+            setQuestion(data.question);
+            setNeuronId(data.neuronId);
+        } catch (error) {
+            console.error(error);
+        }
+    };
     useEffect(() => {
-        const getQuestion = async () => {
-            try {
-                const { data } = await api.get(`/session/${sessionId}/question`);
-                setQuestion(data.question);
-                setNeuronId(data.neuronId);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
         if (sessionId) {
             getQuestion();
         }
@@ -46,6 +45,8 @@ export const Session = () => {
                 studentAnswer: answer,
                 responseTime: 0
             });
+            setAnswer('');
+            getQuestion();
         } catch (error) {
             console.error(error);
         }
