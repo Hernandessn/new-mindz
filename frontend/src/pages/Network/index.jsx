@@ -4,6 +4,8 @@ import { useNodesState, useEdgesState } from "@xyflow/react";
 import { useParams } from "react-router-dom";
 import { ReactFlow, MiniMap, Controls, Background } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { Link } from "react-router-dom";
+
 
 export const Network = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -51,20 +53,21 @@ export const Network = () => {
         setEdges(edges);
     }, [neurons]);
 
- return (
-    <div style={{ width: '100%', height: '100vh' }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        fitView
-      >
-        <MiniMap />
-        <Controls />
-        <Background variant="dots" gap={12} size={1} />
-      </ReactFlow>
-    </div>
-  );
+    return (
+        <div style={{ width: '100%', height: '100vh' }}>
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                fitView
+            >
+                <MiniMap />
+                <Controls />
+                <Background variant="dots" gap={12} size={1} />
+            </ReactFlow>
+            <Link to={`/session/${contentId}`}>Estudar</Link>
+        </div>
+    );
 
 }
