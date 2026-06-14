@@ -5,6 +5,8 @@ import cors from 'cors';
 import { router as authRouter } from './routes/authRoutes.js';
 import { router as contentRouter} from './routes/contentRoutes.js';
 import { router as sessionRouter } from './routes/sessionRoutes.js';
+import './jobs/memoryDecay.js';
+
 dotenv.config();
 
 const app = express();
