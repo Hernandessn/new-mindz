@@ -4,6 +4,7 @@ import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { Upload } from './pages/Upload'
 import { Network } from './pages/Network'
+import { Session } from './pages/Session'
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route path='/upload' element={<Upload />} />
         <Route path='/network/:contentId' element={<Network />} />
+        <Route path='/session/:contentId' element={<Session />} />
       </Routes>
     </Router>
   )
