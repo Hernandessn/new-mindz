@@ -55,7 +55,11 @@ const getQuestion = async (req, res) => {
             if (diff !== 0) return diff;
             return a.score - b.score;
         });
-
+        if (!sorted.length) {
+            return res.status(400).json({
+                msg: "Este conteúdo não possui neurônios"
+            });
+        }
         const weakest = sorted[0];
         const prompt = `
 Você é um tutor educacional adaptativo.
