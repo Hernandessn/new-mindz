@@ -6,6 +6,12 @@ import { ReactFlow, MiniMap, Controls, Background } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Link } from "react-router-dom";
 
+const statusColors = {
+    red: '#ef4444',
+    orange: '#f97316',
+    yellow: '#eab308',
+    green: '#22c55e'
+};
 
 export const Network = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -30,7 +36,11 @@ export const Network = () => {
             return {
                 id: neuron._id,
                 position: { x: index * 200, y: 100 },
-                data: { label: neuron.concept }
+                data: { label: neuron.concept },
+                style: {
+                    backgroundColor: statusColors[neuron.performanceStatus],
+                    color: '#000'
+                }
             };
         });
 
@@ -69,5 +79,4 @@ export const Network = () => {
             <Link to={`/session/${contentId}`}>Estudar</Link>
         </div>
     );
-
 }
