@@ -32,7 +32,8 @@ const neuronsSchema = new mongoose.Schema({
         required: true
     },
     "lastReviewedAt": {
-        type: Date
+        type: Date,
+        index: true
     },
     connections: [{
         type: mongoose.Schema.Types.ObjectId,
